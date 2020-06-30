@@ -40,3 +40,4 @@ while True:
     #print(str(i) + " | " + str(r)  + " | "  + " | " + str(g) + " | " + str(b))
     #print(str(i))
     print()
+    
