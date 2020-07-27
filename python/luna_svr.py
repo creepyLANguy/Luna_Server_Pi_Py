@@ -36,24 +36,24 @@ while True:
     num = int.from_bytes(data, 'little')
     #print(num)
    
-    sb = str("{0:b}".format(num)).zfill(32)    
+    sb = str("{0:b}".format(num)).zfill(32)#DO WE EVEN NEED TO ZFILL HERE?!  
     sb = sb[32:64]#64bit Windows hack
-    print(sb)
+    #print(sb)
    
     ib = sb[0:8]
     i = int(ib, 2)
-    print("i : " + ib + " = " + str(i))
+    #print("i : " + ib + " = " + str(i))
     
-    #rb = sb[8:16]
-    #r = int(rb, 2)
+    rb = sb[8:16]
+    r = int(rb, 2)
     #print("r : " + rb + " = " + str(r))
-    #
-    #gb = sb[16:24]
-    #g = int(gb, 2)
+    
+    gb = sb[16:24]
+    g = int(gb, 2)
     #print("g : " + gb + " = " + str(g))
-    #
-    #bb= sb[24:32]
-    #b = int(bb, 2)
+    
+    bb= sb[24:32]
+    b = int(bb, 2)
     #print("b : " + gb + " = " + str(b))
    
     print(str(i) + " | " + str(r)  + " | " + str(g) + " | " + str(b))
