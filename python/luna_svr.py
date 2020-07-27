@@ -23,19 +23,21 @@ s.bind((HOST, PORT))
 print("Listening on UDP %s:%s" % (HOST, PORT))
 
 # Create NeoPixel object with appropriate configuration.
-strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+#strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 # Intialize the library (must be called once before other functions).
-strip.begin()
+#strip.begin()
 
 
 while True:
-    (data, addr) = s.recvfrom(4)
+    #(data, addr) = s.recvfrom(4)
+    (data, addr) = s.recvfrom(8)#64bit Windows hack
     #print(str(data))
    
     num = int.from_bytes(data, 'little')
     #print(num)
    
     sb = str("{0:b}".format(num)).zfill(32)    
+    sb = sb[32:64]#64bit Windows hack
     print(sb)
    
     ib = sb[0:8]
@@ -54,10 +56,10 @@ while True:
     #b = int(bb, 2)
     #print("b : " + gb + " = " + str(b))
    
-    #print(str(i) + " | " + str(r)  + " | "  + " | " + str(g) + " | " + str(b))
+    print(str(i) + " | " + str(r)  + " | " + str(g) + " | " + str(b))
     #print(str(i))
     print()
     
-    strip.setPixelColor(i, sb)
-    strip.show()
+    #strip.setPixelColor(i, sb)
+    #strip.show()
     
