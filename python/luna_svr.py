@@ -1,5 +1,8 @@
 import socket
 import struct
+import threading
+
+import queue
 
 # LED strip configuration:
 LED_COUNT      = 16      # Number of LED pixels.
@@ -21,6 +24,17 @@ s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind((HOST, PORT))
 print("Listening on UDP %s:%s" % (HOST, PORT))
+
+q = queue.Queue(LED_COUNT)
+
+def processQueue():
+    while True:        
+        if q.empty() == False:
+            item = q.get()
+            #print("Pushed to strip : " + item + "\n")
+
+qprocessor = threading.Thread(target=processQueue)
+qprocessor.start()
 
 # Create NeoPixel object with appropriate configuration.
 #strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
@@ -56,10 +70,18 @@ while True:
     b = int(bb, 2)
     #print("b : " + gb + " = " + str(b))
    
-    print(str(i) + " | " + str(r)  + " | " + str(g) + " | " + str(b))
+    #print(str(i) + " | " + str(r)  + " | " + str(g) + " | " + str(b))
     #print(str(i))
-    print()
     
     #strip.setPixelColor(i, sb)
     #strip.show()
+
+    if q.full() == True:
+        #print("FULLLLL!!!!!!!\n")
+        q.get()
+        #print("Removed from q : " + item)
+            
+    q.put(sb)
+    #print("Added to q : " + sb)
     
+    #print()
