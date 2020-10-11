@@ -10,7 +10,7 @@ import neopixel
 import time
 
 # LED strip configuration:
-LED_COUNT      = 30     # Number of LED pixels.
+LED_COUNT      = 57     # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -23,7 +23,7 @@ BOARD_PIN = board.D18
 
 pixels = neopixel.NeoPixel(BOARD_PIN, LED_COUNT, auto_write=True, pixel_order=ORDER)
 
-HOST = "192.168.8.154"
+HOST = "192.168.0.174"
 #HOST = "127.0.0.1"
 
 PORT = 8886
@@ -60,7 +60,7 @@ while True:
     num = int.from_bytes(data, 'little')
     #print(num)
    
-    sb = str("{0:b}".format(num)).zfill(32)#DO WE EVEN NEED TO ZFILL HERE??  
+    sb = str("{0:b}".format(num)).zfill(32)#DO WE EVEN NEED TO ZFILL HERE?!  
     #sb = sb[32:64]#64bit Windows hack
     #print(sb)
    
@@ -87,11 +87,14 @@ while True:
     #strip.show()
 
     if q.full() == True:
-        print("!!!!!!FULLLLL!!!!!!")
-        removedItem = q.get()
-        print("Removed from q : " + removedItem[i])
+        #print("FULLLLL!!!!!!!\n")
+        #removedItem = q.get()
+        #print("Removed from q : " + removedItem[0])
+        q.get()
             
     q.put((i,r,g,b))
+    #print("Added to q : " + sb)
     print("<--\tIN\t" + str(i) + "\t|" + str(r)  + "\t|" + str(g) + "\t|" + str(b))
     
     #print()
+
