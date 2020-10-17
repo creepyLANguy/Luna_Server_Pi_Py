@@ -10,7 +10,7 @@ import neopixel
 import time
 
 # LED strip configuration:
-LED_COUNT      = 29     # Number of LED pixels.
+LED_COUNT      = 28     # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
 #LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -41,14 +41,20 @@ def processQueue():
     while True:        
         if q.empty() == False:
             item = q.get()
-            pixels[item[0]] = (item[1],item[2],item[3])
-#            runs = runs + 1
-#            if runs == LED_COUNT:            
-#                pixels.show()
-#                runs = 0
-#                print("STRIP UPDATED!")
-            pixels.show()
-            print("-->\tOUT\t" + str(item[0]) + "\t|" + str(item[1]) + "\t|" + str(item[2]) + "\t|" + str(item[3]))
+            if item[0] == 255:
+                for x in range(LED_COUNT):
+                    pixels[x] = (item[1],item[2],item[3])
+                pixels.show()
+                print("-->\tOUT\t" + "[ALL]" + "\t|" + str(item[1]) + "\t|" + str(item[2]) + "\t|" + str(item[3]))
+            else:                
+                pixels[item[0]] = (item[1],item[2],item[3])
+    #            runs = runs + 1
+    #            if runs == LED_COUNT:            
+    #                pixels.show()
+    #                runs = 0
+    #                print("STRIP UPDATED!")
+                pixels.show()
+                print("-->\tOUT\t" + str(item[0]) + "\t|" + str(item[1]) + "\t|" + str(item[2]) + "\t|" + str(item[3]))
 
 qprocessor = threading.Thread(target=processQueue)
 qprocessor.start()
@@ -95,12 +101,15 @@ while True:
 
     if q.full() == True:
         #print("FULLLLL!!!!!!!\n")
-        q.get()
-        #print("Removed from q : " + item)
+        #removedItem = q.get() 
+        #print("Removed from q : " + removedItem[0]) 
+        q.get()        
             
     q.put((i,r,g,b))
     #print("Added to q : " + sb)
-    print("<--\tIN\t" + str(i) + "\t|" + str(r)  + "\t|" + str(g) + "\t|" + str(b))
-    
+    if i == 255:
+        print("<--\tIN\t" + "[ALL]" + "\t|" + str(r)  + "\t|" + str(g) + "\t|" + str(b))
+    else:
+        print("<--\tIN\t" + str(i) + "\t|" + str(r)  + "\t|" + str(g) + "\t|" + str(b))
     #print()
 
