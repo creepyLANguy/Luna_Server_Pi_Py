@@ -1,3 +1,6 @@
+import sys
+import os
+
 import socket
 import struct
 import threading
@@ -10,6 +13,7 @@ import neopixel
 import time
 
 MAX_INDEX = 249
+CONFIG_INDEX = 250
 FILL_INDEX = 255
 
 # LED strip configuration:
@@ -22,6 +26,13 @@ LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 ORDER = neopixel.GRB
 BOARD_PIN = board.D18
 AUTO_WRITE = False
+
+
+if len(sys.argv) > 1:
+    LED_BRIGHTNESS = float(int(sys.argv[1])/100)
+    LED_COUNT = int(sys.argv[2])
+    
+print("Initialising strip with brightness : " + str(LED_BRIGHTNESS) + ", count : " + str(LED_COUNT))
 
 pixels = neopixel.NeoPixel(BOARD_PIN, LED_COUNT, brightness=LED_BRIGHTNESS, auto_write=AUTO_WRITE, pixel_order=ORDER)
 
@@ -102,6 +113,9 @@ while True:
             pixels.show()
             print("<-->\t[ALL]\t" + str(r) + "\t|" + str(g) + "\t|" + str(b))
             q.queue.clear()
+        elif i == CONFIG_INDEX:
+            print("Configuration packet received.\nRestarting with : " + str(g) + "|" + str(b))
+            os.execv(sys.executable, ['python3'] + [sys.argv[0]] + [str(g),str(b)])
         else:
             print("UNIMPLEMENTED PACKET TYPE")
     else:
