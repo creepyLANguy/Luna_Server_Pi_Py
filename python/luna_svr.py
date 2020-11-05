@@ -1,3 +1,5 @@
+#!/usr/bin/sudo python3
+
 import sys
 import os
 
@@ -9,7 +11,6 @@ import queue
 
 import board
 import neopixel
-
 import time
 
 MAX_INDEX = 249
@@ -31,7 +32,7 @@ AUTO_WRITE = False
 if len(sys.argv) > 1:
     LED_BRIGHTNESS = float(int(sys.argv[1])/100)
     LED_COUNT = int(sys.argv[2])
-    
+
 print("Initialising strip with brightness : " + str(LED_BRIGHTNESS) + ", count : " + str(LED_COUNT))
 
 pixels = neopixel.NeoPixel(BOARD_PIN, LED_COUNT, brightness=LED_BRIGHTNESS, auto_write=AUTO_WRITE, pixel_order=ORDER)
@@ -39,6 +40,9 @@ pixels = neopixel.NeoPixel(BOARD_PIN, LED_COUNT, brightness=LED_BRIGHTNESS, auto
 
 HOST = "192.168.0.174"
 PORT = 8886
+
+print("Sleeping for 5 seconds in case this is running on boot...")
+time.sleep(5)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -50,12 +54,12 @@ q = queue.Queue(LED_COUNT)
 
 def processQueue():
     runs = 0
-    while True:        
+    while True:
         if q.empty() == False:
-            item = q.get()                
+            item = q.get()
             pixels[item[0]] = (item[1],item[2],item[3])
 #            runs = runs + 1
-#            if runs == LED_COUNT:            
+#            if runs == LED_COUNT:
 #                pixels.show()
 #                runs = 0
 #                print("STRIP UPDATED!")
@@ -69,45 +73,45 @@ while True:
     (data, addr) = s.recvfrom(4)
     #(data, addr) = s.recvfrom(8)#64bit Windows hack
     #print(str(data))
-   
+
     num = int.from_bytes(data, 'little')
     #print(num)
-   
-    sb = str("{0:b}".format(num)).zfill(32)#DO WE EVEN NEED TO ZFILL HERE?!  
+
+    sb = str("{0:b}".format(num)).zfill(32)#DO WE EVEN NEED TO ZFILL HERE?!
     #sb = sb[32:64]#64bit Windows hack
     #print(sb)
-   
+
     ib = sb[0:8]
     i = int(ib, 2)
     #print("i : " + ib + " = " + str(i))
-    
+
     rb = sb[8:16]
     r = int(rb, 2)
     if r == 0:
         r = 1
     #print("r : " + rb + " = " + str(r))
-    
+
     gb = sb[16:24]
     g = int(gb, 2)
     if g == 0:
         g = 1
     #print("g : " + gb + " = " + str(g))
-    
+
     bb= sb[24:32]
     b = int(bb, 2)
     if b == 0:
         b = 1
     #print("b : " + gb + " = " + str(b))
-   
+
     #print(str(i) + " | " + str(r)  + " | " + str(g) + " | " + str(b))
 
     if q.full() == True:
         #print("FULLLLL!!!!!!!\n")
-        #removedItem = q.get() 
-        #print("Removed from q : " + removedItem[0]) 
-        q.get()        
-            
-    if i > MAX_INDEX:        
+        #removedItem = q.get()
+        #print("Removed from q : " + removedItem[0])
+        q.get()
+
+    if i > MAX_INDEX:
         if i == FILL_INDEX:
             pixels.fill((r,g,b))
             pixels.show()
@@ -121,4 +125,3 @@ while True:
     else:
         q.put((i,r,g,b))
         print("<--\tIN\t" + str(i) + "\t|" + str(r)  + "\t|" + str(g) + "\t|" + str(b))
-
