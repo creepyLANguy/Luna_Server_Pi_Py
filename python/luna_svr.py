@@ -41,8 +41,8 @@ pixels = neopixel.NeoPixel(BOARD_PIN, LED_COUNT, brightness=LED_BRIGHTNESS, auto
 HOST = "192.168.0.174"
 PORT = 8886
 
-print("Sleeping for 5 seconds in case this is running on boot...")
-time.sleep(5)
+print("Sleeping for 10 seconds in case this is running on boot...")
+time.sleep(10)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
