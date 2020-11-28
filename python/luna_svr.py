@@ -15,6 +15,8 @@ import time
 
 MAX_INDEX = 249
 CONFIG_INDEX = 250
+SHUTDOWN_PI_INDEX = 251
+RESTART_PI_INDEX = 252
 FILL_INDEX = 255
 
 # LED strip configuration:
@@ -120,6 +122,12 @@ while True:
         elif i == CONFIG_INDEX:
             print("Configuration packet received.\nRestarting with : " + str(g) + "|" + str(b))
             os.execv(sys.executable, ['python3'] + [sys.argv[0]] + [str(g),str(b)])
+        elif i == SHUTDOWN_PI_INDEX:
+            print("Shutdown packet recieved. Shutting down entire system immediately.")
+            os.system("shutdown now -h")
+        elif i == RESTART_PI_INDEX:
+            print("Restart packet recieved. Restarting entire system immediately.")
+            os.system("shutdown now -r")
         else:
             print("UNIMPLEMENTED PACKET TYPE")
     else:
