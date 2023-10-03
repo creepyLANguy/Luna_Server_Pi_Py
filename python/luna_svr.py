@@ -20,7 +20,7 @@ RESTART_PI_INDEX = 252
 FILL_INDEX = 255
 
 # LED strip configuration:
-LED_COUNT      = 28     # Number of LED pixels.
+LED_COUNT      = 28      # Number of LED pixels.
 LED_BRIGHTNESS = 0.5     # [0.0, 1.0]
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 10      # DMA channel to use for generating signal (try 10)
@@ -40,7 +40,7 @@ print("Initialising strip with brightness : " + str(LED_BRIGHTNESS) + ", count :
 pixels = neopixel.NeoPixel(BOARD_PIN, LED_COUNT, brightness=LED_BRIGHTNESS, auto_write=AUTO_WRITE, pixel_order=ORDER)
 
 
-HOST = #"192.168.0.174"
+HOST = "192.168.0.174" # Update to hosts's IP
 PORT = 8886
 
 print("Sleeping for 10 seconds in case this is running on boot...")
