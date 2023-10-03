@@ -40,7 +40,7 @@ print("Initialising strip with brightness : " + str(LED_BRIGHTNESS) + ", count :
 pixels = neopixel.NeoPixel(BOARD_PIN, LED_COUNT, brightness=LED_BRIGHTNESS, auto_write=AUTO_WRITE, pixel_order=ORDER)
 
 
-HOST = "192.168.0.174"
+HOST = #"192.168.0.174"
 PORT = 8886
 
 print("Sleeping for 10 seconds in case this is running on boot...")
@@ -60,11 +60,6 @@ def processQueue():
         if q.empty() == False:
             item = q.get()
             pixels[item[0]] = (item[1],item[2],item[3])
-#            runs = runs + 1
-#            if runs == LED_COUNT:
-#                pixels.show()
-#                runs = 0
-#                print("STRIP UPDATED!")
             pixels.show()
             print("-->\tOUT\t" + str(item[0]) + "\t|" + str(item[1]) + "\t|" + str(item[2]) + "\t|" + str(item[3]))
 
@@ -74,43 +69,31 @@ qprocessor.start()
 while True:
     (data, addr) = s.recvfrom(4)
     #(data, addr) = s.recvfrom(8)#64bit Windows hack
-    #print(str(data))
 
     num = int.from_bytes(data, 'little')
-    #print(num)
 
     sb = str("{0:b}".format(num)).zfill(32)#DO WE EVEN NEED TO ZFILL HERE?!
     #sb = sb[32:64]#64bit Windows hack
-    #print(sb)
 
     ib = sb[0:8]
     i = int(ib, 2)
-    #print("i : " + ib + " = " + str(i))
 
     rb = sb[8:16]
     r = int(rb, 2)
     if r == 0:
         r = 1
-    #print("r : " + rb + " = " + str(r))
 
     gb = sb[16:24]
     g = int(gb, 2)
     if g == 0:
         g = 1
-    #print("g : " + gb + " = " + str(g))
 
     bb= sb[24:32]
     b = int(bb, 2)
     if b == 0:
         b = 1
-    #print("b : " + gb + " = " + str(b))
-
-    #print(str(i) + " | " + str(r)  + " | " + str(g) + " | " + str(b))
 
     if q.full() == True:
-        #print("FULLLLL!!!!!!!\n")
-        #removedItem = q.get()
-        #print("Removed from q : " + removedItem[0])
         q.get()
 
     if i > MAX_INDEX:
